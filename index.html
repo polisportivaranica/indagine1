@@ -312,14 +312,6 @@
                         <label for="associationName">Nome dell'Associazione Sportiva *</label>
                         <input type="text" id="associationName" required placeholder="Es: Ranica Calcio ASD">
                     </div>
-                    <div class="form-group">
-                        <label for="contactEmail">Email di contatto</label>
-                        <input type="email" id="contactEmail" placeholder="presidente@associazione.it">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactPhone">Telefono di contatto</label>
-                        <input type="tel" id="contactPhone" placeholder="335 123 4567">
-                    </div>
                 </div>
 
                 <div class="courses-section">
@@ -358,7 +350,7 @@
         let courseCounter = 0;
         
         // URL del Google Apps Script Web App (da sostituire con quello reale)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9RKseN_7pD9a19OmsUq4yvjr2uJdo2BgyhqHPn9HokgNk84ueqIKaLpQcPT4OrA_G/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
 
         function addCourse() {
             courseCounter++;
@@ -463,8 +455,6 @@
 
         function collectFormData() {
             const associationName = document.getElementById('associationName').value;
-            const contactEmail = document.getElementById('contactEmail').value;
-            const contactPhone = document.getElementById('contactPhone').value;
             
             const courses = [];
             const courseElements = document.querySelectorAll('.course-item');
@@ -491,8 +481,6 @@
 
             return {
                 associazione: associationName,
-                email: contactEmail,
-                telefono: contactPhone,
                 dataCompilazione: new Date().toISOString(),
                 corsi: courses
             };
