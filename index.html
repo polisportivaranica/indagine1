@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indagine Polisportiva - Raccolta Dati Associazioni</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .association-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .courses-section {
+            margin-top: 40px;
+        }
+
+        .courses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .courses-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .add-course-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .add-course-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .course-item {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .course-item:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .course-number {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .remove-course-btn {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .remove-course-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .submit-section {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 2px solid #e1e5e9;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .results-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Indagine Polisportiva</h1>
+            <p>Raccolta dati delle associazioni sportive</p>
+        </div>
+
+        <div class="form-container">
+            <div class="association-info">
+                <h2 style="margin-bottom: 20px; color: #333;">🏢 Informazioni Associazione</h2>
+                <div class="form-group">
+                    <label for="associationName">Nome dell'Associazione Sportiva *</label>
+                    <input type="text" id="associationName" required placeholder="Es: Ranica Calcio ASD">
+                </div>
+            </div>
+
+            <div class="courses-section">
+                <div class="courses-header">
+                    <h2>🏃‍♂️ Corsi/Squadre</h2>
+                    <button class="add-course-btn" onclick="addCourse()">+ Aggiungi Corso/Squadra</button>
+                </div>
+                <div id="coursesContainer">
+                    <!-- I corsi verranno aggiunti dinamicamente qui -->
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button class="submit-btn" onclick="generateResults()">📋 Genera Riepilogo Dati</button>
+                <div id="results" class="results" style="display: none;">
+                    <h3>📄 Dati Raccolti</h3>
+                    <div id="resultsContent" class="results-content"></div>
+                    <button class="copy-btn" onclick="copyResults()">📋 Copia Dati</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let courseCounter = 0;
+
+        function addCourse() {
+            courseCounter++;
+            const container = document.getElementById('coursesContainer');
+            
+            const courseDiv = document.createElement('div');
+            courseDiv.className = 'course-item';
+            courseDiv.id = `course-${courseCounter}`;
+            
+            courseDiv.innerHTML = `
+                <div class="course-header">
+                    <span class="course-number">Corso/Squadra #${courseCounter}</span>
+                    <button class="remove-course-btn" onclick="removeCourse(${courseCounter})">🗑️ Rimuovi</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="courseName-${courseCounter}">Nome del Corso/Squadra *</label>
+                    <input type="text" id="courseName-${courseCounter}" required placeholder="Es: Pulcini, Esordienti...">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ageRange-${courseCounter}">Età Partecipanti *</label>
+                        <input type="text" id="ageRange-${courseCounter}" required placeholder="Es: 5-8, 9-11...">
+                    </div>
+                    <div class="form-group">
+                        <label for="weeklyHours-${courseCounter}">N. ore settimanali di allenamento</label>
+                        <input type="number" id="weeklyHours-${courseCounter}" min="0" placeholder="Es: 3">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startMonth-${courseCounter}">Mese di partenza</label>
+                        <select id="startMonth-${courseCounter}">
+                            <option value="">Seleziona mese</option>
+                            <option value="Gennaio">Gennaio</option>
+                            <option value="Febbraio">Febbraio</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Aprile">Aprile</option>
+                            <option value="Maggio">Maggio</option>
+                            <option value="Giugno">Giugno</option>
+                            <option value="Luglio">Luglio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Settembre">Settembre</option>
+                            <option value="Ottobre">Ottobre</option>
+                            <option value="Novembre">Novembre</option>
+                            <option value="Dicembre">Dicembre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="endMonth-${courseCounter}">Mese di termine</label>
+                        <select id="endMonth-${courseCounter}">
+                            <option value="">Seleziona mese</option>
+                            <option value="Gennaio">Gennaio</option>
+                            <option value="Febbraio">Febbraio</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Aprile">Aprile</option>
+                            <option value="Maggio">Maggio</option>
+                            <option value="Giugno">Giugno</option>
+                            <option value="Luglio">Luglio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Settembre">Settembre</option>
+                            <option value="Ottobre">Ottobre</option>
+                            <option value="Novembre">Novembre</option>
+                            <option value="Dicembre">Dicembre</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="championship-${courseCounter}">Nome campionato/campionati partecipati</label>
+                        <input type="text" id="championship-${courseCounter}" placeholder="Es: Primi calci, CSI...">
+                    </div>
+                    <div class="form-group">
+                        <label for="homeGames-${courseCounter}">N. partite casalinghe</label>
+                        <input type="number" id="homeGames-${courseCounter}" min="0" placeholder="Es: 12">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="promotionalEvents-${courseCounter}">Eventi promozionali a cui si è partecipato</label>
+                    <textarea id="promotionalEvents-${courseCounter}" rows="3" placeholder="Descrivi gli eventi promozionali..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tournaments-${courseCounter}">Tornei agonistici a cui si è partecipato</label>
+                    <textarea id="tournaments-${courseCounter}" rows="3" placeholder="Descrivi i tornei agonistici..."></textarea>
+                </div>
+            `;
+            
+            container.appendChild(courseDiv);
+        }
+
+        function removeCourse(courseId) {
+            const courseElement = document.getElementById(`course-${courseId}`);
+            if (courseElement) {
+                courseElement.remove();
+            }
+        }
+
+        function generateResults() {
+            const associationName = document.getElementById('associationName').value;
+            
+            if (!associationName.trim()) {
+                alert('⚠️ Inserisci il nome dell\'associazione prima di continuare!');
+                return;
+            }
+
+            const courses = [];
+            const courseElements = document.querySelectorAll('.course-item');
+            
+            courseElements.forEach((courseElement, index) => {
+                const courseId = courseElement.id.split('-')[1];
+                const courseName = document.getElementById(`courseName-${courseId}`)?.value || '';
+                
+                if (courseName.trim()) {
+                    const course = {
+                        nome: courseName,
+                        eta: document.getElementById(`ageRange-${courseId}`)?.value || '',
+                        mesePartenza: document.getElementById(`startMonth-${courseId}`)?.value || '',
+                        meseTermine: document.getElementById(`endMonth-${courseId}`)?.value || '',
+                        oreSettimanali: document.getElementById(`weeklyHours-${courseId}`)?.value || '',
+                        campionato: document.getElementById(`championship-${courseId}`)?.value || '',
+                        partiteCasalinghe: document.getElementById(`homeGames-${courseId}`)?.value || '',
+                        eventiPromozionali: document.getElementById(`promotionalEvents-${courseId}`)?.value || '',
+                        torneiAgonistici: document.getElementById(`tournaments-${courseId}`)?.value || ''
+                    };
+                    courses.push(course);
+                }
+            });
+
+            if (courses.length === 0) {
+                alert('⚠️ Aggiungi almeno un corso/squadra prima di generare il riepilogo!');
+                return;
+            }
+
+            let results = `ASSOCIAZIONE SPORTIVA: ${associationName}\n`;
+            results += `DATA COMPILAZIONE: ${new Date().toLocaleDateString('it-IT')}\n`;
+            results += `NUMERO CORSI/SQUADRE: ${courses.length}\n\n`;
+            results += `${'='.repeat(80)}\n\n`;
+
+            courses.forEach((course, index) => {
+                results += `CORSO/SQUADRA #${index + 1}\n`;
+                results += `${'─'.repeat(40)}\n`;
+                results += `Nome: ${course.nome}\n`;
+                results += `Età partecipanti: ${course.eta}\n`;
+                results += `Mese partenza: ${course.mesePartenza}\n`;
+                results += `Mese termine: ${course.meseTermine}\n`;
+                results += `Ore settimanali allenamento: ${course.oreSettimanali}\n`;
+                results += `Campionato partecipato: ${course.campionato}\n`;
+                results += `N. partite casalinghe: ${course.partiteCasalinghe}\n`;
+                results += `Eventi promozionali: ${course.eventiPromozionali}\n`;
+                results += `Tornei agonistici: ${course.torneiAgonistici}\n\n`;
+            });
+
+            document.getElementById('resultsContent').textContent = results;
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyResults() {
+            const resultsContent = document.getElementById('resultsContent').textContent;
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(resultsContent).then(() => {
+                    alert('✅ Dati copiati negli appunti!');
+                }).catch(err => {
+                    console.error('Errore nella copia:', err);
+                    fallbackCopy(resultsContent);
+                });
+            } else {
+                fallbackCopy(resultsContent);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('✅ Dati copiati negli appunti!');
+            } catch (err) {
+                alert('❌ Impossibile copiare automaticamente. Seleziona e copia manualmente il testo.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Aggiungi automaticamente un corso all'avvio
+        window.onload = function() {
+            addCourse();
+        };
+    </script>
+</body>
+</html>
