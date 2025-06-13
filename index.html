@@ -203,54 +203,78 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
         }
 
-        .submit-btn:hover {
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
         }
 
-        .results {
-            margin-top: 30px;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .results h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+        .loading {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
         }
 
-        .results-content {
-            background: white;
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
             padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e1e5e9;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            max-height: 400px;
-            overflow-y: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            display: none;
         }
 
-        .copy-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+            display: none;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196F3;
+            padding: 20px;
+            margin-bottom: 30px;
             border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
 
-        .copy-btn:hover {
-            background: #218838;
-            transform: translateY(-1px);
+        .info-box h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #424242;
+            line-height: 1.6;
         }
 
         @media (max-width: 768px) {
@@ -276,37 +300,65 @@
         </div>
 
         <div class="form-container">
-            <div class="association-info">
-                <h2 style="margin-bottom: 20px; color: #333;">🏢 Informazioni Associazione</h2>
-                <div class="form-group">
-                    <label for="associationName">Nome dell'Associazione Sportiva *</label>
-                    <input type="text" id="associationName" required placeholder="Es: Ranica Calcio ASD">
-                </div>
+            <div class="info-box">
+                <h3>📋 Istruzioni</h3>
+                <p>Compila tutti i dati della tua associazione sportiva. I dati verranno salvati automaticamente in un database sicuro per l'analisi dell'indagine.</p>
             </div>
 
-            <div class="courses-section">
-                <div class="courses-header">
-                    <h2>🏃‍♂️ Corsi/Squadre</h2>
-                    <button class="add-course-btn" onclick="addCourse()">+ Aggiungi Corso/Squadra</button>
+            <form id="surveyForm">
+                <div class="association-info">
+                    <h2 style="margin-bottom: 20px; color: #333;">🏢 Informazioni Associazione</h2>
+                    <div class="form-group">
+                        <label for="associationName">Nome dell'Associazione Sportiva *</label>
+                        <input type="text" id="associationName" required placeholder="Es: Ranica Calcio ASD">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email di contatto</label>
+                        <input type="email" id="contactEmail" placeholder="presidente@associazione.it">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Telefono di contatto</label>
+                        <input type="tel" id="contactPhone" placeholder="335 123 4567">
+                    </div>
                 </div>
-                <div id="coursesContainer">
-                    <!-- I corsi verranno aggiunti dinamicamente qui -->
-                </div>
-            </div>
 
-            <div class="submit-section">
-                <button class="submit-btn" onclick="generateResults()">📋 Genera Riepilogo Dati</button>
-                <div id="results" class="results" style="display: none;">
-                    <h3>📄 Dati Raccolti</h3>
-                    <div id="resultsContent" class="results-content"></div>
-                    <button class="copy-btn" onclick="copyResults()">📋 Copia Dati</button>
+                <div class="courses-section">
+                    <div class="courses-header">
+                        <h2>🏃‍♂️ Corsi/Squadre</h2>
+                        <button type="button" class="add-course-btn" onclick="addCourse()">+ Aggiungi Corso/Squadra</button>
+                    </div>
+                    <div id="coursesContainer">
+                        <!-- I corsi verranno aggiunti dinamicamente qui -->
+                    </div>
                 </div>
-            </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">📤 Invia Dati all'Indagine</button>
+                    
+                    <div class="loading" id="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Invio dei dati in corso...</p>
+                    </div>
+                    
+                    <div class="success-message" id="successMessage">
+                        <h3>✅ Dati Inviati con Successo!</h3>
+                        <p>Grazie per aver partecipato all'indagine. I tuoi dati sono stati salvati correttamente.</p>
+                    </div>
+                    
+                    <div class="error-message" id="errorMessage">
+                        <h3>❌ Errore nell'Invio</h3>
+                        <p>Si è verificato un errore. Riprova o contatta l'amministratore dell'indagine.</p>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         let courseCounter = 0;
+        
+        // URL del Google Apps Script Web App (da sostituire con quello reale)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9RKseN_7pD9a19OmsUq4yvjr2uJdo2BgyhqHPn9HokgNk84ueqIKaLpQcPT4OrA_G/exec';
 
         function addCourse() {
             courseCounter++;
@@ -319,7 +371,7 @@
             courseDiv.innerHTML = `
                 <div class="course-header">
                     <span class="course-number">Corso/Squadra #${courseCounter}</span>
-                    <button class="remove-course-btn" onclick="removeCourse(${courseCounter})">🗑️ Rimuovi</button>
+                    <button type="button" class="remove-course-btn" onclick="removeCourse(${courseCounter})">🗑️ Rimuovi</button>
                 </div>
                 
                 <div class="form-group">
@@ -409,14 +461,11 @@
             }
         }
 
-        function generateResults() {
+        function collectFormData() {
             const associationName = document.getElementById('associationName').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            const contactPhone = document.getElementById('contactPhone').value;
             
-            if (!associationName.trim()) {
-                alert('⚠️ Inserisci il nome dell\'associazione prima di continuare!');
-                return;
-            }
-
             const courses = [];
             const courseElements = document.querySelectorAll('.course-item');
             
@@ -440,69 +489,72 @@
                 }
             });
 
-            if (courses.length === 0) {
-                alert('⚠️ Aggiungi almeno un corso/squadra prima di generare il riepilogo!');
+            return {
+                associazione: associationName,
+                email: contactEmail,
+                telefono: contactPhone,
+                dataCompilazione: new Date().toISOString(),
+                corsi: courses
+            };
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            const formData = collectFormData();
+            
+            if (!formData.associazione.trim()) {
+                alert('⚠️ Inserisci il nome dell\'associazione prima di continuare!');
                 return;
             }
 
-            let results = `ASSOCIAZIONE SPORTIVA: ${associationName}\n`;
-            results += `DATA COMPILAZIONE: ${new Date().toLocaleDateString('it-IT')}\n`;
-            results += `NUMERO CORSI/SQUADRE: ${courses.length}\n\n`;
-            results += `${'='.repeat(80)}\n\n`;
-
-            courses.forEach((course, index) => {
-                results += `CORSO/SQUADRA #${index + 1}\n`;
-                results += `${'─'.repeat(40)}\n`;
-                results += `Nome: ${course.nome}\n`;
-                results += `Età partecipanti: ${course.eta}\n`;
-                results += `Mese partenza: ${course.mesePartenza}\n`;
-                results += `Mese termine: ${course.meseTermine}\n`;
-                results += `Ore settimanali allenamento: ${course.oreSettimanali}\n`;
-                results += `Campionato partecipato: ${course.campionato}\n`;
-                results += `N. partite casalinghe: ${course.partiteCasalinghe}\n`;
-                results += `Eventi promozionali: ${course.eventiPromozionali}\n`;
-                results += `Tornei agonistici: ${course.torneiAgonistici}\n\n`;
-            });
-
-            document.getElementById('resultsContent').textContent = results;
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function copyResults() {
-            const resultsContent = document.getElementById('resultsContent').textContent;
-            
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(resultsContent).then(() => {
-                    alert('✅ Dati copiati negli appunti!');
-                }).catch(err => {
-                    console.error('Errore nella copia:', err);
-                    fallbackCopy(resultsContent);
-                });
-            } else {
-                fallbackCopy(resultsContent);
+            if (formData.corsi.length === 0) {
+                alert('⚠️ Aggiungi almeno un corso/squadra prima di inviare i dati!');
+                return;
             }
-        }
 
-        function fallbackCopy(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
+            // Mostra loading
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+
             try {
-                document.execCommand('copy');
-                alert('✅ Dati copiati negli appunti!');
-            } catch (err) {
-                alert('❌ Impossibile copiare automaticamente. Seleziona e copia manualmente il testo.');
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('surveyForm').reset();
+                    document.getElementById('coursesContainer').innerHTML = '';
+                    courseCounter = 0;
+                    addCourse(); // Riaggiunge un corso vuoto
+                } else {
+                    throw new Error(result.message || 'Errore sconosciuto');
+                }
+
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
             }
-            
-            document.body.removeChild(textArea);
         }
+
+        // Event listener per il form
+        document.getElementById('surveyForm').addEventListener('submit', submitForm);
 
         // Aggiungi automaticamente un corso all'avvio
         window.onload = function() {
